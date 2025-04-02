@@ -11,7 +11,7 @@ const authProvider: AuthProvider = {
     login: async function (params: LoginParams): Promise<{ redirectTo?: string | boolean } | void | never> {
         const { email, password } = params;
 
-        const response: Response= await fetch(loginUrl, {
+        const response: Response = await fetch(loginUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
