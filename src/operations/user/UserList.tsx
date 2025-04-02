@@ -1,13 +1,13 @@
 import { JSX } from 'react';
-import { Datagrid, DateField, Identifier, List, SearchInput, SimpleList, TextField, TextInput } from 'react-admin';
+import { Datagrid, DateField, Identifier, List, SimpleList, TextField } from 'react-admin';
 import { Theme, useMediaQuery } from '@mui/material';
-
-const userFilters: JSX.Element[] = [<SearchInput label={'Search'} source={'q'} alwaysOn={true} />, <TextInput source={'role'} alwaysOn={true} />];
+/*
+const userFilters: JSX.Element[] = [<SearchInput label={'Search'} source={'q'} alwaysOn={true} />, <TextInput source={'role'} alwaysOn={true} />];*/
 
 const UserList = (): JSX.Element => {
     const isSmall: boolean = useMediaQuery((theme: Theme): string => theme.breakpoints.down('sm'));
     return (
-        <List filters={userFilters}>
+        <List /*filters={userFilters}*/>
             {isSmall ? (
                 <SimpleList
                     primaryText={(record): string => record.name}
