@@ -1,12 +1,12 @@
-import {Admin, ListGuesser, Resource} from "react-admin";
+import { Admin, Resource } from "react-admin";
+import { JSX } from "react";
+import UserShow from "./operations/user/UserShow.tsx";
+import UserList from "./operations/user/UserList.tsx";
 
-
-
-const App = () => (
+export default function App(): JSX.Element {
+  return (
     <Admin>
-        <Resource name="events" list={ListGuesser} />
-        <Resource name="comments" list={ListGuesser} />
+      <Resource name={"users"} list={UserList} show={UserShow} />
     </Admin>
-);
-
-export default App;
+  );
+}

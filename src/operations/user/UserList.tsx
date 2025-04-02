@@ -2,13 +2,14 @@ import { JSX } from "react";
 import {
   Datagrid,
   DateField,
+  Identifier,
   List,
   SearchInput,
   SimpleList,
   TextField,
   TextInput,
 } from "react-admin";
-import { useMediaQuery } from "@mui/material";
+import { Theme, useMediaQuery } from "@mui/material";
 
 const userFilters: JSX.Element[] = [
   <SearchInput label={"Search"} source={"q"} alwaysOn={true} />,
@@ -16,21 +17,23 @@ const userFilters: JSX.Element[] = [
 ];
 
 const UserList = (): JSX.Element => {
-  const isSmall: boolean = useMediaQuery((theme) =>
+  const isSmall: boolean = useMediaQuery((theme: Theme): string =>
     theme.breakpoints.down("sm"),
   );
   return (
     <List filters={userFilters}>
       {isSmall ? (
         <SimpleList
-          primaryText={(record) => record.name}
-          secondaryText={(record) => record.role}
-          tertiaryText={(record) =>
+          primaryText={(record): string => record.name}
+          secondaryText={(record): string => record.role}
+          tertiaryText={(record): string =>
             new Date(record.account_creation_date).toLocaleDateString()
           }
-          rowClick={(_id, _resource, record) =>
-            record.canEdit ? "edit" : "show"
-          }
+          rowClick={(
+            _id: Identifier,
+            _resource: string,
+            record,
+          ): "edit" | "show" => (record.canEdit ? "edit" : "show")}
         />
       ) : (
         <Datagrid>
