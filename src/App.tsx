@@ -1,7 +1,8 @@
-import { Admin, EditGuesser, ListGuesser, Resource, ShowGuesser } from 'react-admin';
+import { Admin, EditGuesser, ListGuesser, LoginWithEmail, Resource, ShowGuesser } from 'react-admin';
 import { JSX } from 'react';
 import UserShow from './operations/user/UserShow.tsx';
 import UserList from './operations/user/UserList.tsx';
+import authProvider from './security/authProvider.ts';
 
 export default function App(): JSX.Element {
     return (
