@@ -1,3 +1,23 @@
+import {
+    CreateParams,
+    CreateResult,
+    DataProvider,
+    DeleteParams,
+    DeleteResult,
+    GetListParams,
+    GetListResult,
+    GetOneParams,
+    GetOneResult,
+    HttpError,
+    Identifier,
+    QueryFunctionContext,
+    RaRecord,
+    UpdateParams,
+    UpdateResult,
+} from 'react-admin';
+import userDataProvider from './userDataProvider.ts';
+import eventDataProvider from './eventDataProvider.ts';
+
 const getDataProvider = (resource: string) => {
     switch (resource) {
         case 'accounts':
