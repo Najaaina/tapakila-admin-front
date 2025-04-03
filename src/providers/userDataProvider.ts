@@ -1,5 +1,5 @@
 import { GetListParams, GetListResult, GetOneParams, GetOneResult, HttpError, QueryFunctionContext, RaRecord, UpdateParams, UpdateResult } from 'react-admin';
-import { Account } from '../types/Account.tsx';
+import { Account } from '../types/Account.ts';
 
 const API_URL: string = `${import.meta.env.VITE_API_URL}/api/admin`;
 
