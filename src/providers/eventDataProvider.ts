@@ -70,25 +70,38 @@ const eventDataProvider = {
     },
 
     // Create a new event
-    /*create: async (resource, params) => {
-        const response = await fetch('/api/events', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(params.data),
-        });
-        const event = await response.json();
-        return { data: event };
-    },*/
     create: async function <RecordType extends RaRecord = never>(params: CreateParams<RecordType>): Promise<CreateResult<RecordType>> {
+        //  Upload image to cloudinary
+        const { image, ...eventData } = params.data;
+        console.log(eventData);
+        let imageUrl: string = '';
+
+        if (image && image.rawFile) {
+            const formData = new FormData();
+            formData.append('file', image.rawFile);
+            formData.append('upload_preset', 'event_images');
+
+            const cloudinaryResponse: Response = await fetch('http', {
+                method: 'POST',
+                body: formData,
+            });
+            if (!cloudinaryResponse.ok) {
+                return Promise.reject(new HttpError('Failed to upload image', cloudinaryResponse.status));
+            }
+            const cloudinaryResult = await cloudinaryResponse.json();
+            imageUrl = cloudinaryResult.secure_url;
+        }
+
         const response: Response = await fetch(`${API_URL}/event`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
             },
-            body: JSON.stringify(params.data),
+            body: JSON.stringify({
+                ...eventData,
+                image: imageUrl ? { url: imageUrl } : null,
+            }),
         });
         if (!response.ok) {
             return Promise.reject(new HttpError('Failed to create record event ', response.status));
@@ -225,33 +238,6 @@ const eventDataProvider = {
             data: previousData as RecordType,
         };
     },
-
-    // Upload event image
-    /*uploadImage: async (resource, params) => {
-        const formData = new FormData();
-        formData.append('file', params.data);
-
-        const response = await fetch(`/api/events/${params.id}/image`, {
-            method: 'POST',
-            body: formData,
-        });
-        const result = await response.json();
-        return { data: result };
-    },*/
-
-    // Set event status (Draft, Published, Cancelled)
-    /*updateStatus: async (resource, params) => {
-        const { id, status } = params;
-        const response = await fetch(`/api/events/${id}/status`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status }),
-        });
-        const event = await response.json();
-        return { data: event };
-    },*/
 };
 
 export default eventDataProvider;
