@@ -45,13 +45,12 @@ const userDataProvider = {
         }
         console.log(response.headers);
         const data = await response.json();
-        const mappedData = data.map((user: Account) => ({
-            ...user,
-            id: user.id_account,
-        }));
 
         return {
-            data: mappedData,
+            data: {
+                ...data,
+                id: data.id_account,
+            },
         };
     },
     update: async function <RecordType extends RaRecord = never>(params: UpdateParams): Promise<UpdateResult<RecordType>> {
