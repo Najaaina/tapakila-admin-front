@@ -1,25 +1,32 @@
 import { GetListParams, GetListResult, GetOneParams, GetOneResult, HttpError, QueryFunctionContext, RaRecord, UpdateParams, UpdateResult } from 'react-admin';
+import { Account } from '../types/Account.tsx';
 
-const API_URL: string = import.meta.env.VITE_API_URL;
+const API_URL: string = `${import.meta.env.VITE_API_URL}/api/admin`;
 
 const userDataProvider = {
     getList: async function <RecordType extends RaRecord = never>(params: GetListParams & QueryFunctionContext): Promise<GetListResult<RecordType>> {
-        const data: Response = await fetch(`${API_URL}/account`, {
+        const { pagination } = params;
+        const page = pagination?.page ?? 1;
+        const perPage = pagination?.perPage ?? 10;
+        const query = `?page=${page}&limit=${perPage}`;
+
+        const response: Response = await fetch(`${API_URL}/account${query}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
             },
         });
-        console.log(data.headers);
-        console.log('Pagination :' + params.pagination); /*
-        const { page, perPage } = params.pagination;
-        const query = `?page=${page}&limit=${perPage}`;*/
-        const userList = await data.json();
+
+        const { data, total } = await response.json();
+        const mappedData = data.map((user: Account) => ({
+            ...user,
+            id: user.id_account,
+        }));
 
         return {
-            data: userList,
-            total: 10,
+            data: mappedData,
+            total,
         };
     },
     getOne: async function <RecordType extends RaRecord = never>(params: GetOneParams<RecordType> & QueryFunctionContext): Promise<GetOneResult<RecordType>> {
@@ -38,27 +45,37 @@ const userDataProvider = {
         }
         console.log(response.headers);
         const data = await response.json();
+        const mappedData = data.map((user: Account) => ({
+            ...user,
+            id: user.id_account,
+        }));
 
         return {
-            data: data,
+            data: mappedData,
         };
     },
     update: async function <RecordType extends RaRecord = never>(params: UpdateParams): Promise<UpdateResult<RecordType>> {
-        const { id } = params;
-        const response: Response = await fetch(`${API_URL}/account/${id}/${params.data.role}`, {
+        const { id, data } = params;
+
+        const response: Response = await fetch(`${API_URL}/account/${id}/${data.role}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
             },
         });
+
         if (!response.ok) {
-            return Promise.reject(new HttpError('Failed to update', response.status));
+            return Promise.reject(new HttpError('Failed to update user role', response.status));
         }
-        console.log(response.body);
+
         const updatedUser = await response.json();
+
         return {
-            data: updatedUser,
+            data: {
+                ...updatedUser,
+                id: updatedUser.id_account,
+            },
         };
     },
 };
