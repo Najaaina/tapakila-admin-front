@@ -18,7 +18,7 @@ import {
 import userDataProvider from './userDataProvider.ts';
 import eventDataProvider from './eventDataProvider.ts';
 
-const getDataProvider = (resource: string) => {
+/*const getDataProvider = (resource: string) => {
     switch (resource) {
         case 'accounts':
             return userDataProvider;
@@ -27,26 +27,44 @@ const getDataProvider = (resource: string) => {
         default:
             throw new Error('No data provider');
     }
-};
+};*/
 
 export const dataProvider: DataProvider = {
     getList: async function <RecordType extends RaRecord = never>(
         resource: string,
         params: GetListParams & QueryFunctionContext
     ): Promise<GetListResult<RecordType>> {
-        const currentDataProvider = getDataProvider(resource);
-        return currentDataProvider.getList(params);
+        switch (resource) {
+            case 'accounts':
+                return userDataProvider.getList(params);
+            case 'events':
+                return eventDataProvider.getList(params);
+            default:
+                throw new Error('No data provider');
+        }
     },
     getOne: async function <RecordType extends RaRecord = never>(
         resource: string,
         params: GetOneParams<RecordType> & QueryFunctionContext
     ): Promise<GetOneResult<RecordType>> {
-        const currentDataProvider = getDataProvider(resource);
-        return currentDataProvider.getOne(params);
+        switch (resource) {
+            case 'accounts':
+                return userDataProvider.getOne(params);
+            case 'events':
+                return eventDataProvider.getOne(params);
+            default:
+                throw new Error('No data provider');
+        }
     },
     update: async function <RecordType extends RaRecord = never>(resource: string, params: UpdateParams): Promise<UpdateResult<RecordType>> {
-        const currentDataProvider = getDataProvider(resource);
-        return currentDataProvider.update(params);
+        switch (resource) {
+            case 'accounts':
+                return userDataProvider.update(params);
+            case 'events':
+                return eventDataProvider.update(params);
+            default:
+                throw new Error('No data provider');
+        }
     },
     create: function <RecordType extends Omit<RaRecord, 'id'> = never, ResultRecordType extends RaRecord = RecordType & { id: Identifier }>(
         resource: string,
@@ -61,8 +79,7 @@ export const dataProvider: DataProvider = {
     },
     delete: function <RecordType extends RaRecord = never>(resource: string, params: DeleteParams<RecordType>): Promise<DeleteResult<RecordType>> {
         if (resource === 'events') {
-            const currentDataProvider = eventDataProvider;
-            return currentDataProvider.delete(params);
+            return eventDataProvider.delete(params);
         } else {
             return Promise.reject(new HttpError('Not implemented', 501));
         }
