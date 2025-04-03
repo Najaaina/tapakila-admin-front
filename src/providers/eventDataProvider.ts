@@ -50,7 +50,7 @@ const eventDataProvider = {
     // Get a single event by ID
     getOne: async function <RecordType extends RaRecord = never>(params: GetOneParams<RecordType> & QueryFunctionContext): Promise<GetOneResult<RecordType>> {
         const { id } = params;
-        const response: Response = await fetch(`${API_URL}/event${id}`, {
+        const response: Response = await fetch(`${API_URL}/event/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
