@@ -71,40 +71,25 @@ const eventDataProvider = {
 
     // Create a new event
     create: async function <RecordType extends RaRecord = never>(params: CreateParams<RecordType>): Promise<CreateResult<RecordType>> {
-        //  Upload image to cloudinary
-        const { image, ...eventData } = params.data;
-        console.log(eventData);
-        let imageUrl: string = '';
-
-        if (image && image.rawFile) {
-            const formData = new FormData();
-            formData.append('file', image.rawFile);
-            formData.append('upload_preset', 'event_images');
-
-            const cloudinaryResponse: Response = await fetch('http', {
-                method: 'POST',
-                body: formData,
-            });
-            if (!cloudinaryResponse.ok) {
-                return Promise.reject(new HttpError('Failed to upload image', cloudinaryResponse.status));
+        const formData = new FormData();
+        Object.entries(params.data).forEach(([key, value]) => {
+            if (key === 'image' && value.rawFile) {
+                formData.append(key, value.rawFile);
+            } else {
+                formData.append(key, value as string);
             }
-            const cloudinaryResult = await cloudinaryResponse.json();
-            imageUrl = cloudinaryResult.secure_url;
-        }
+        });
 
         const response: Response = await fetch(`${API_URL}/event`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
             },
-            body: JSON.stringify({
-                ...eventData,
-                image: imageUrl ? { url: imageUrl } : null,
-            }),
+            body: formData,
         });
+
         if (!response.ok) {
-            return Promise.reject(new HttpError('Failed to create record event ', response.status));
+            return Promise.reject(new HttpError('Failed to create event', response.status));
         }
 
         const createdResult = await response.json();
