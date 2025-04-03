@@ -1,6 +1,6 @@
 import { AuthProvider, HttpError } from 'react-admin';
 
-const loginUrl: string = `${import.meta.env.VITE_API_URL}/account/login`;
+const loginUrl: string = `${import.meta.env.VITE_API_URL}/login`;
 
 interface LoginParams {
     email: string;
