@@ -5,6 +5,13 @@ const API_URL: string = `${import.meta.env.VITE_API_URL}/api/admin`;
 
 const userDataProvider = {
     getList: async function <RecordType extends RaRecord = never>(params: GetListParams & QueryFunctionContext): Promise<GetListResult<RecordType>> {
+        const token = sessionStorage.getItem('accessToken');
+
+        if (!token) {
+            console.error('No access token found! Authentication failed.');
+            return Promise.reject(new HttpError('Unauthorized', 401));
+        }
+
         const { pagination } = params;
         const page = pagination?.page ?? 1;
         const perPage = pagination?.perPage ?? 10;
@@ -14,19 +21,19 @@ const userDataProvider = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+                Authorization: `Bearer ${token}`,
             },
         });
 
-        const { data, total } = await response.json();
-        const mappedData = data.map((user: Account) => ({
+        const data = await response.json();
+        const mappedData = data.data.map((user: Account) => ({
             ...user,
             id: user.id_account,
         }));
 
         return {
             data: mappedData,
-            total,
+            total: data.total,
         };
     },
     getOne: async function <RecordType extends RaRecord = never>(params: GetOneParams<RecordType> & QueryFunctionContext): Promise<GetOneResult<RecordType>> {

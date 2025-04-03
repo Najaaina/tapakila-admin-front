@@ -22,7 +22,9 @@ const authProvider: AuthProvider = {
             return Promise.reject(new HttpError(errorMessage, response.status));
         }
 
-        const { accessToken } = await response.json();
+        const responseData = await response.json();
+
+        const accessToken = responseData.token;
         sessionStorage.setItem('accessToken', accessToken);
 
         return {

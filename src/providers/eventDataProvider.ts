@@ -21,6 +21,12 @@ const API_URL: string = `${import.meta.env.VITE_API_URL}/api/admin`;
 const eventDataProvider = {
     // Get the list of events with pagination and sorting
     getList: async function <RecordType extends RaRecord = never>(params: GetListParams & QueryFunctionContext): Promise<GetListResult<RecordType>> {
+        const token = sessionStorage.getItem('accessToken');
+        if (!token) {
+            console.error('No access token found!');
+            return Promise.reject(new HttpError('Unauthorized', 401));
+        }
+
         const { pagination, sort } = params;
         const page: number = pagination?.page ?? 1;
         const perPage: number = pagination?.perPage ?? 10;
