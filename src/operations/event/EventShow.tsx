@@ -3,10 +3,10 @@ import { ArrayField, BooleanField, Datagrid, DateField, ImageField, NumberField,
 export const EventShow = () => (
     <Show>
         <SimpleShowLayout>
-            <ImageField source='url' title='Image' src={'url'} />
+            <ImageField source='image.url' label='Image' />
             <TextField source='title' />
             <TextField source='description' />
-            <DateField source='event_date' />
+            <DateField source='event_date' options={{ year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }} />
             <TextField source='location' />
             <TextField source='organizer' />
             <TextField source='category' />
