@@ -79,15 +79,20 @@ const eventDataProvider = {
     // Create a new event
     create: async function <RecordType extends RaRecord = never>(params: CreateParams<RecordType>): Promise<CreateResult<RecordType>> {
         const formData = new FormData();
+
         Object.entries(params.data).forEach(([key, value]) => {
-            if (key === 'image' && value.rawFile) {
+            if (key === 'image' && value?.rawFile) {
                 formData.append(key, value.rawFile);
-            } else {
-                formData.append(key, value as string);
+            } else if (typeof value !== 'undefined' && value !== null) {
+                formData.append(key, value.toString());
             }
         });
 
-        const response: Response = await fetch(`${API_URL}/event`, {
+        for (const [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
+        const response = await fetch(`${API_URL}/event`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,

@@ -8,6 +8,7 @@ import { dataProvider } from './providers/dataProvider.ts';
 import { EventShow } from './operations/event/EventShow.tsx';
 import UserIcon from '@mui/icons-material/Group';
 import { TapakilaLoginPage } from './components/TapakilaLoginPage.tsx';
+import EventCreate from './operations/event/EventCreate.tsx';
 
 export default function App(): JSX.Element {
     return (
@@ -19,7 +20,7 @@ export default function App(): JSX.Element {
             darkTheme={radiantDarkTheme}
         >
             <Resource name={'accounts'} list={UserList} show={UserShow} icon={UserIcon} />
-            <Resource name={'events'} list={EventList} show={EventShow} edit={EditGuesser} />
+            <Resource name={'events'} list={EventList} show={EventShow} edit={EditGuesser} create={EventCreate} />
             {/*
             <Resource name={'ticket'} list={ListGuesser} show={ShowGuesser} edit={EditGuesser} />
 */}
