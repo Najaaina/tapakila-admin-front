@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { Show, SimpleShowLayout, TextField } from 'react-admin';
-
+import RoleButton from '../../components/RoleButton';
 const UserShow = (): JSX.Element => {
     return (
         <Show>
@@ -8,7 +8,7 @@ const UserShow = (): JSX.Element => {
                 <TextField source={'name'} label={'Username'} />
                 <TextField source={'email'} label={'Email'} />
                 <TextField source={'account_creation_date'} label={'Member since'} />
-                <TextField source={'role'} label={'Role'} />
+                <RoleButton />
             </SimpleShowLayout>
         </Show>
     );
