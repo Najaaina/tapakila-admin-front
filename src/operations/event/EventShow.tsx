@@ -1,11 +1,22 @@
 import { ArrayField, BooleanField, Datagrid, DateField, ImageField, NumberField, Show, SimpleShowLayout, TextField } from 'react-admin';
 import { AddTicketButton } from '../../components/AddTicketButton.tsx';
+import { EventStatusButtons } from '../../components/EventStatusButton.tsx';
 // import { ReservationList } from '../../components/ReservationList.tsx';
 
 export const EventShow = () => (
     <Show>
         <SimpleShowLayout>
-            <ImageField source='image.url' label='Image' />
+            <ImageField
+                source='image.url'
+                label='Image'
+                sx={{
+                    '& .RaImageField-image': {
+                        width: '100%',
+                        height: '300px',
+                        borderRadius: 2,
+                    },
+                }}
+            />
             <TextField source='title' />
             <TextField source='description' />
             <DateField
@@ -24,6 +35,7 @@ export const EventShow = () => (
             <TextField source='organizer' />
             <TextField source='category' />
             <TextField source='status' />
+            <EventStatusButtons />
             <ArrayField source='ticket_type'>
                 <Datagrid>
                     <TextField source='ticket_name' />

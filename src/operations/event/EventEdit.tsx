@@ -1,24 +1,17 @@
-import { DateTimeInput, Edit, SelectInput, SimpleForm, TextInput } from 'react-admin';
+import { DateTimeInput, Edit, ImageField, ImageInput, required, SimpleForm, TextInput } from 'react-admin';
 
 export const EventEdit = () => (
     <Edit>
         <SimpleForm>
-            <TextInput source='title' />
-            <TextInput source='description' />
-            <DateTimeInput source='event_date' />
-            <TextInput source='location' />
-            <TextInput source='organizer' />
-            <TextInput source='category' />
-            <TextInput source='image.url' />
-            <TextInput source='id_event' />
-            <SelectInput
-                source='status'
-                choices={[
-                    { id: 'draft', name: 'Draft' },
-                    { id: 'published', name: 'Published' },
-                    { id: 'cancelled', name: 'Draft' },
-                ]}
-            />
+            <ImageInput source='image' label='Image'>
+                <ImageField source='src' title='title' />
+            </ImageInput>
+
+            <TextInput source='title' label='Title' validate={[required()]} />
+            <TextInput source='description' label='Description' multiline />
+            <TextInput source={'organizer'} />
+            <DateTimeInput source='event_date' label='Date' />
+            <TextInput source='location' label='Location' />
         </SimpleForm>
     </Edit>
 );

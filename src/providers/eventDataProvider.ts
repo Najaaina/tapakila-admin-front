@@ -121,7 +121,7 @@ const eventDataProvider = {
             return Promise.reject(new HttpError('No valid data provided for update', 400));
         }
 
-        if ('status' in data && Object.keys(data).length === 1) {
+        if ('status' in data && data.status !== params.previousData.status && Object.keys(data).every(key => key === 'status')) {
             //     Update the status of an event (to PUBLISHED or CANCELLED
             const response: Response = await fetch(`${API_URL}/event/${id}/${data.status}`, {
                 method: 'PATCH',

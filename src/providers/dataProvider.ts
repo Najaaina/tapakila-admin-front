@@ -79,7 +79,8 @@ export const dataProvider: DataProvider = {
     },
     delete: function <RecordType extends RaRecord = never>(resource: string, params: DeleteParams<RecordType>): Promise<DeleteResult<RecordType>> {
         if (resource === 'events') {
-            return eventDataProvider.delete(params);
+            const currentDataProvider = eventDataProvider;
+            return currentDataProvider.delete(params);
         } else {
             return Promise.reject(new HttpError('Not implemented', 501));
         }
